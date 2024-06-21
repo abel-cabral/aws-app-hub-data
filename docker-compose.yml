@@ -90,3 +90,27 @@ services:
       - REDIS_URL=redis://default:9yooZeAMooRTsnvMoW6teUpMyoBt1rVd@redis-10663.c308.sa-east-1-1.ec2.redns.redis-cloud.com:10663
       - MODE=production
       - TAGLIST=Inovação,Games,Filmes,Séries,Animes,Notícias,Desenvolvimento,Festas,Cursos,Saúde,Educação,Ciência,RedesSociais,Música,Livros,Moda,Culinária,Viagens,Arte,Promoções
+
+  postgress:
+    image: postgres:latest
+    container_name: postgresDB
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 64M
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - banco_relacional:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  banco_relacional:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./db/postgres-data
