@@ -112,6 +112,7 @@ Implemente ferramentas de monitoramento como Prometheus e Grafana para acompanha
 
 ### Segurança
 •	Firewall: Configure um firewall usando ufw ou iptables para restringir o acesso a serviços.
+
 •	Atualizações: Mantenha seu sistema e pacotes sempre atualizados com sudo apt update && sudo apt upgrade.
 
 ### Documentação
