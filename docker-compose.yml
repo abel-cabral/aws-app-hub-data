@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  simple-sum:
+    build:
+      context: ./simple-sum
+    image: simple-sum:latest
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 32M
+    ports:
+      - "9001:80"
+
+  blink:
+    build:
+      context: ./blink
+    image: blink:latest
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 32M
+    ports:
+      - "9002:80"
+
+  blink-api:
+    build:
+      context: ./blink-api
+    image: blink-api:latest
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 128M
+    ports:
+      - "8002:8080"
+    environment:
+      - DATABASE=mongodb+srv://jcabral:9wmPRPKXdgqcHqI6@cluster0.s9efpek.mongodb.net/blink?retryWrites=true&w=majority&appName=Cluster0
+    
+  cryptlink:
+    build:
+      context: ./cryptlink
+    image: cryptlink:latest
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 32M
+    ports:
+      - "9003:80"
+
+  cryptlink-api:
+    build:
+      context: ./cryptlink-api
+    image: cryptlink-api:latest
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 96M
+    ports:
+      - "8003:8080"
+    environment:
+      - DATABASE=mongodb+srv://jcabral:9wmPRPKXdgqcHqI6@cluster0.s9efpek.mongodb.net/cryptlink
+      - DATABASE_NAME=secret-links
+
+  websage-api:
+    build:
+      context: ./websage-api
+    image: websage-api:latest
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 96M
+    ports:
+      - "8001:8001"
+    environment:
+      - OPENAI_API_KEY=sk-proj-opvmxhWIIy06oQKNyFMmT3BlbkFJsIz9bO8GMceCSfDf2CQV
+      - PROJECT_ID=proj_noaKqfJadDzcwlpdr40412HS
+      - ORGANIZATION=org-25YcHj5xoRloJDcgpLoZAAoy
+      - DBHOST=mongodb+srv://jcabral:9wmPRPKXdgqcHqI6@cluster0.s9efpek.mongodb.net/blink?retryWrites=true&w=majority&appName=Cluster0
+      - DATABASE=WebSage
+      - COLLECTION=catalogo-de-links
+      - JWT_SECRET_KEY=AKcu9@bP@W6v%x&g57bKQ^P7XXJ52M9oMqC
+      - SECRET_KEY=e2g&Csy*82iHEJyXPHCattPXmEgKTpS%^X%
+      - JWT_ACCESS_TOKEN_EXPIRES=30
+      - REDIS_URL=redis://default:9yooZeAMooRTsnvMoW6teUpMyoBt1rVd@redis-10663.c308.sa-east-1-1.ec2.redns.redis-cloud.com:10663
+      - MODE=production
+      - TAGLIST=Inovação,Games,Filmes,Séries,Animes,Notícias,Desenvolvimento,Festas,Cursos,Saúde,Educação,Ciência,RedesSociais,Música,Livros,Moda,Culinária,Viagens,Arte,Promoções
