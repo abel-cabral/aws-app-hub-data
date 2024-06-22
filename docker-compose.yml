@@ -93,7 +93,6 @@ services:
 
   db_mysql:
     image: mysql:latest
-    container_name: db_mysql
     deploy:
       replicas: 1
       resources:
@@ -108,62 +107,34 @@ services:
       - "3306:3306"
     volumes:
       - banco_relacional:/var/lib/mysql
+      - /etc/letsencrypt/live/mysql.abelcode.dev/fullchain.pem:/etc/mysql/ssl/fullchain.pem
+      - /etc/letsencrypt/live/mysql.abelcode.dev/privkey.pem:/etc/mysql/ssl/privkey.pem
+    networks:
+      - abel_network
+
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
+    image: phpmyadmin:latest
     deploy:
       replicas: 1
       resources:
         limits:
           memory: 128M
-    links:
-      - db_mysql
     environment:
       PMA_HOST: db_mysql
       PMA_PORT: 3306
       PMA_ARBITRARY: 1
     ports:
-      - 8080:80
-
-#   mysql:
-#     image: mysql:latest
-#     container_name: mysql_db
-#     deploy:
-#       replicas: 1
-#       resources:
-#         limits:
-#           memory: 256M
-#     environment:
-#       MYSQL_ROOT_PASSWORD: ozteps
-#       MYSQL_DATABASE: database
-#       MYSQL_USER: admin
-#       MYSQL_PASSWORD: admin
-#     ports:
-#       - "3306:3306"
-#     volumes:
-#       - banco_relacional:/var/lib/mysql
-
-#   phpmyadmin:
-#     image: phpmyadmin/phpmyadmin
-#     container_name: pma
-#     deploy:
-#       replicas: 1
-#       resources:
-#         limits:
-#           memory: 64M
-#     links:
-#       - mysql
-#     environment:
-#       PMA_HOST: mysql
-#       PMA_PORT: 3306
-#       PMA_ARBITRARY: 1
-#     ports:
-#       - 8080:80
+      - 9004:80
+    depends_on:
+      - db_mysql
+    networks:
+      - abel_network
 
 volumes:
   banco_relacional:
     driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./db/mysql-data
+
+networks:
+  abel_network:
+    driver: overlay
+    attachable: true
