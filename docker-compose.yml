@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   simple-sum:
@@ -38,7 +38,7 @@ services:
       - "8002:8080"
     environment:
       - DATABASE=mongodb+srv://jcabral:9wmPRPKXdgqcHqI6@cluster0.s9efpek.mongodb.net/blink?retryWrites=true&w=majority&appName=Cluster0
-    
+
   cryptlink:
     build:
       context: ./cryptlink
@@ -91,21 +91,74 @@ services:
       - MODE=production
       - TAGLIST=Inovação,Games,Filmes,Séries,Animes,Notícias,Desenvolvimento,Festas,Cursos,Saúde,Educação,Ciência,RedesSociais,Música,Livros,Moda,Culinária,Viagens,Arte,Promoções
 
-  postgress:
-    image: postgres:latest
-    container_name: postgresDB
+  db_mysql:
+    image: mysql:latest
+    container_name: db_mysql
     deploy:
       replicas: 1
       resources:
         limits:
-          memory: 64M
+          memory: 256M
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-    volumes:
-      - banco_relacional:/var/lib/postgresql/data
+      MYSQL_ROOT_PASSWORD: ozteps
+      MYSQL_DATABASE: app_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
     ports:
-      - "5432:5432"
+      - "3306:3306"
+    volumes:
+      - banco_relacional:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 128M
+    links:
+      - db_mysql
+    environment:
+      PMA_HOST: db_mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    ports:
+      - 8080:80
+
+#   mysql:
+#     image: mysql:latest
+#     container_name: mysql_db
+#     deploy:
+#       replicas: 1
+#       resources:
+#         limits:
+#           memory: 256M
+#     environment:
+#       MYSQL_ROOT_PASSWORD: ozteps
+#       MYSQL_DATABASE: database
+#       MYSQL_USER: admin
+#       MYSQL_PASSWORD: admin
+#     ports:
+#       - "3306:3306"
+#     volumes:
+#       - banco_relacional:/var/lib/mysql
+
+#   phpmyadmin:
+#     image: phpmyadmin/phpmyadmin
+#     container_name: pma
+#     deploy:
+#       replicas: 1
+#       resources:
+#         limits:
+#           memory: 64M
+#     links:
+#       - mysql
+#     environment:
+#       PMA_HOST: mysql
+#       PMA_PORT: 3306
+#       PMA_ARBITRARY: 1
+#     ports:
+#       - 8080:80
 
 volumes:
   banco_relacional:
@@ -113,4 +166,4 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ./db/postgres-data
+      device: ./db/mysql-data
