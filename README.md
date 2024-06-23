@@ -32,7 +32,12 @@ free -h
 ### Limpar Todos os Caches e Dados
 Para parar todos os containers em execução, remover todos os containers, imagens e volumes do Docker, execute:
 ```bash
-docker stop $(docker ps -q) && docker rm $(docker ps -a -q) && docker rmi $(docker images -q) && docker system prune -a --volumes
+docker ps -q | xargs -r docker stop && \
+docker ps -a -q | xargs -r docker rm && \
+docker images -q | xargs -r docker rmi && \
+docker volume ls -q | xargs -r docker volume rm && \
+docker network ls -q | grep -v "bridge\|host\|none" | xargs -r docker network rm && \
+docker system prune -a --volumes
 ```
 
 ### Comandos Básicos do Docker
