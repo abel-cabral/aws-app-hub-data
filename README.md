@@ -1,6 +1,6 @@
 # Guia de Comandos Essenciais
 
-Este guia contém comandos úteis para gerenciamento de recursos de memória no Linux, gerenciamento de containers Docker, manipulação de serviços Docker Stack, reinicialização do servidor NGINX e instalação e gerenciamento de certificados SSL.
+Este guia contém comandos úteis para gerenciamento de recursos de memória no Linux, gerenciamento de containers Docker, manipulação de serviços Docker Stack, reinicialização do servidor NGINX e instalação e gerenciamento de certificados SSL. Basicamente dicas de como gerencias um "cluster" em uma instancia EC2 na AWS, permitindo ter varios serviços rodando na versão grátis (750 horas) da AWS.
 
 ## Índice
 - [Linux](#linux)
