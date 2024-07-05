@@ -66,10 +66,10 @@ services:
       - DATABASE=mongodb+srv://jcabral:9wmPRPKXdgqcHqI6@cluster0.s9efpek.mongodb.net/cryptlink
       - DATABASE_NAME=secret-links
 
-  websage-api:
+  cardsage-api:
     build:
-      context: ./websage-api
-    image: websage-api:latest
+      context: ./cardsage-api
+    image: cardsage-api:latest
     deploy:
       replicas: 1
       resources:
@@ -82,7 +82,7 @@ services:
       - PROJECT_ID=proj_noaKqfJadDzcwlpdr40412HS
       - ORGANIZATION=org-25YcHj5xoRloJDcgpLoZAAoy
       - DBHOST=mongodb+srv://jcabral:9wmPRPKXdgqcHqI6@cluster0.s9efpek.mongodb.net/blink?retryWrites=true&w=majority&appName=Cluster0
-      - DATABASE=WebSage
+      - DATABASE=CardSage
       - COLLECTION=catalogo-de-links
       - JWT_SECRET_KEY=AKcu9@bP@W6v%x&g57bKQ^P7XXJ52M9oMqC
       - SECRET_KEY=e2g&Csy*82iHEJyXPHCattPXmEgKTpS%^X%
