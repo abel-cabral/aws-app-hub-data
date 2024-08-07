@@ -32,12 +32,14 @@ free -h
 ### Limpar Todos os Caches e Dados
 Para parar todos os containers em execução, remover todos os containers, imagens e volumes do Docker, execute:
 ```bash
-docker ps -q | xargs -r docker stop && \
-docker ps -a -q | xargs -r docker rm && \
-docker images -q | xargs -r docker rmi && \
-docker volume ls -q | xargs -r docker volume rm && \
-docker network ls -q | grep -v "bridge\|host\|none" | xargs -r docker network rm && \
-docker system prune -a --volumes
+docker stop $(docker ps -q) || true
+docker rm $(docker ps -a -q) || true
+docker rmi $(docker images -q) || true
+docker volume rm $(docker volume ls -q) || true
+docker network rm $(docker network ls -q) || true
+docker builder prune -a -f
+sudo rm -rf /var/lib/docker/containers/*/*.log
+sudo rm -rf /var/lib/docker
 ```
 
 ### Comandos Básicos do Docker
@@ -122,3 +124,17 @@ Implemente ferramentas de monitoramento como Prometheus e Grafana para acompanha
 
 ### Documentação
 Mantenha uma documentação detalhada de todos os processos e configurações para facilitar a manutenção e troubleshooting.
+
+### DOCKER HUB
+Efetue login na plataforma via terminal
+
+#### Construa a imagem com a tag baseada na data e hora
+````bash
+docker build -t username/my-repository:latest .
+````
+#### Envia a imagem para o Docker Hub
+````bash
+docker push username/my-repository:latest
+````
+
+docker build -t ozteps/cardsage-api:latest . && docker push ozteps/cardsage-api:latest

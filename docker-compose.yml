@@ -2,11 +2,12 @@ version: "3.8"
 
 services:
   simple-sum:
-    build:
-      context: ./simple-sum
-    image: simple-sum:latest
+    image: ozteps/simple-sum:latest
     deploy:
       replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
       resources:
         limits:
           memory: 32M
@@ -14,11 +15,12 @@ services:
       - "9001:80"
 
   blink:
-    build:
-      context: ./blink
-    image: blink:latest
+    image: ozteps/blink:latest
     deploy:
       replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
       resources:
         limits:
           memory: 32M
@@ -26,11 +28,12 @@ services:
       - "9002:80"
 
   blink-api:
-    build:
-      context: ./blink-api
-    image: blink-api:latest
+    image: ozteps/blink-api:latest
     deploy:
       replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
       resources:
         limits:
           memory: 128M
@@ -40,11 +43,12 @@ services:
       - DATABASE=mongodb+srv://jcabral:9wmPRPKXdgqcHqI6@cluster0.s9efpek.mongodb.net/blink?retryWrites=true&w=majority&appName=Cluster0
 
   cryptlink:
-    build:
-      context: ./cryptlink
-    image: cryptlink:latest
+    image: ozteps/cryptlink:latest
     deploy:
       replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
       resources:
         limits:
           memory: 32M
@@ -52,11 +56,12 @@ services:
       - "9003:80"
 
   cryptlink-api:
-    build:
-      context: ./cryptlink-api
-    image: cryptlink-api:latest
+    image: ozteps/cryptlink-api:latest
     deploy:
       replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
       resources:
         limits:
           memory: 96M
@@ -67,18 +72,19 @@ services:
       - DATABASE_NAME=secret-links
 
   cardsage-api:
-    build:
-      context: ./cardsage-api
-    image: cardsage-api:latest
+    image: ozteps/cardsage-api:latest
     deploy:
-      replicas: 1
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
       resources:
         limits:
-          memory: 96M
+          memory: 256M
     ports:
       - "8001:8001"
     environment:
-      - OPENAI_API_KEY=sk-proj-opvmxhWIIy06oQKNyFMmT3BlbkFJsIz9bO8GMceCSfDf2CQV
+      - OPENAI_API_KEY=sk-proj-opvmxhWIIy06oQKNyFMmT3BlbkFJsIz9bO8GMceCSfDf2CQV # Verifique a segurança das credenciais
       - PROJECT_ID=proj_noaKqfJadDzcwlpdr40412HS
       - ORGANIZATION=org-25YcHj5xoRloJDcgpLoZAAoy
       - DBHOST=mongodb+srv://jcabral:9wmPRPKXdgqcHqI6@cluster0.s9efpek.mongodb.net/blink?retryWrites=true&w=majority&appName=Cluster0
@@ -99,10 +105,10 @@ services:
         limits:
           memory: 256M
     environment:
-      MYSQL_ROOT_PASSWORD: ozteps
+      MYSQL_ROOT_PASSWORD: ozteps # Verifique a segurança das credenciais
       MYSQL_DATABASE: app_db
       MYSQL_USER: admin
-      MYSQL_PASSWORD: admin
+      MYSQL_PASSWORD: admin # Verifique a segurança das credenciais
     ports:
       - "3306:3306"
     volumes:
@@ -129,6 +135,12 @@ services:
       - db_mysql
     networks:
       - abel_network
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30 --cleanup
 
 volumes:
   banco_relacional:
