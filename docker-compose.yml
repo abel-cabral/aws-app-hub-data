@@ -136,8 +136,26 @@ services:
     networks:
       - abel_network
 
+  cleaner:
+    image: alpine:latest
+    command: /bin/sh -c "apk add --no-cache docker-cli && while true; do docker system prune -af --filter 'until=24h'; sleep 3600; done"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 32M
+      restart_policy:
+        condition: on-failure
+  
   watchtower:
     image: containrrr/watchtower
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 32M
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --interval 30 --cleanup
